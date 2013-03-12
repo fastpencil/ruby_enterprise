@@ -6,7 +6,7 @@
 # Author:: Joshua Timberman (<joshua@opscode.com>)
 # Author:: Sean Cribbs (<seancribbs@gmail.com>)
 # Author:: Michael Hale (<mikehale@gmail.com>)
-# 
+#
 # Copyright:: 2011-2012, Mike Fiedler
 # Copyright:: 2009-2010, Opscode, Inc.
 # Copyright:: 2009, Sean Cribbs
@@ -49,13 +49,13 @@ remote_file "#{Chef::Config[:file_cache_path]}/ruby-enterprise-#{ree_ver}.tar.gz
   not_if { ::File.exists?("#{Chef::Config[:file_cache_path]}/ruby-enterprise-#{ree_ver}.tar.gz") }
 end
 
+install_cmd = 'ruby-enterprise-#{ree_ver}/installer --auto=#{ree_path}'
+unless node['ruby_enterprise']['install_useful_gems']
+  install_cmd += ' --dont-install-useful-gems'
+end
 bash "Install Ruby Enterprise Edition" do
   cwd Chef::Config[:file_cache_path]
-  code <<-EOH
-  tar zxf ruby-enterprise-#{ree_ver}.tar.gz
-  ruby-enterprise-#{ree_ver}/installer \
-    --auto=#{ree_path}
-  EOH
+  code "tar zxf ruby-enterprise-#{ree_ver}.tar.gz && #{install_cmd}"
   not_if do
     ::File.exists?("#{ree_path}/bin/ree-version") &&
       system("#{ree_path}/bin/ree-version | grep -q '#{ree_ver}$'")
