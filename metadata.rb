@@ -1,9 +1,10 @@
+name             "ruby_enterprise"
 maintainer       "Mike Fiedler"
 maintainer_email "miketheman@gmail.com"
 license          "Apache 2.0"
 description      "Installs/Configures ruby-enterprise"
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version          "0.3.0"
+version          "0.3.1"
 
 recipe "ruby_enterprise", "Installs Ruby Enterprise Edition"
 

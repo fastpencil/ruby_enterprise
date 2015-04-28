@@ -32,7 +32,8 @@ packages = value_for_platform(
     'default' => ['readline-devel', 'openssl-devel', 'patch']
   },
   ["ubuntu"] => {
-    '12.04' => ['libreadline-dev', 'libssl-dev']
+    '12.04' => ['libreadline-dev', 'libssl-dev'],
+    '14.04' => ['libreadline-dev', 'libssl-dev']
   },
   "default" => ['libreadline5-dev', 'libssl-dev']
 )
@@ -49,7 +50,8 @@ remote_file "#{Chef::Config[:file_cache_path]}/ruby-enterprise-#{ree_ver}.tar.gz
   not_if { ::File.exists?("#{Chef::Config[:file_cache_path]}/ruby-enterprise-#{ree_ver}.tar.gz") }
 end
 
-install_cmd = 'ruby-enterprise-#{ree_ver}/installer --auto=#{ree_path}'
+install_cmd = "ruby-enterprise-#{ree_ver}/installer --auto=#{ree_path}"
+install_cmd += value_for_platform( ["ubuntu"] => { "14.04" => " --no-tcmalloc" } )
 unless node['ruby_enterprise']['install_useful_gems']
   install_cmd += ' --dont-install-useful-gems'
 end
