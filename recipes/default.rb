@@ -38,6 +38,12 @@ packages = value_for_platform(
   "default" => ['libreadline5-dev', 'libssl-dev']
 )
 
+cflags = value_for_platform(
+  ["ubuntu"] => {
+    '14.04' => '-O2 -fno-tree-dce -fno-optimize-sibling-calls'
+  }
+)
+
 packages.each do |pkg|
   package pkg
 end
@@ -58,6 +64,9 @@ end
 bash "Install Ruby Enterprise Edition" do
   cwd Chef::Config[:file_cache_path]
   code "tar zxf ruby-enterprise-#{ree_ver}.tar.gz && #{install_cmd}"
+  if not cflags.nil?
+    environment 'CFLAGS' => cflags
+  end
   not_if do
     ::File.exists?("#{ree_path}/bin/ree-version") &&
       system("#{ree_path}/bin/ree-version | grep -q '#{ree_ver}$'")
